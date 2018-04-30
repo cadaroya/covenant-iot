@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  hardware_id: 1
+  token: 1
+  analog_reading: 1
+  threshold: 1
+
+two:
+  hardware_id: 1
+  token: 1
+  analog_reading: 1
+  threshold: 1

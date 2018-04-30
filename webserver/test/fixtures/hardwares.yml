@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ipv4_octet1: 1
+  ipv4_octet2: 1
+  ipv4_octet3: 1
+  ipv4_octet4: 1
+  mac_addr_byte1: 1
+  mac_addr_byte2: 1
+  mac_addr_byte3: 1
+  mac_addr_byte4: 1
+  mac_addr_byte5: 1
+  mac_addr_byte6: 1
+
+two:
+  ipv4_octet1: 1
+  ipv4_octet2: 1
+  ipv4_octet3: 1
+  ipv4_octet4: 1
+  mac_addr_byte1: 1
+  mac_addr_byte2: 1
+  mac_addr_byte3: 1
+  mac_addr_byte4: 1
+  mac_addr_byte5: 1
+  mac_addr_byte6: 1
