@@ -46,4 +46,8 @@ If on Windows: http://railsinstaller.org/en
 ## Additional:
 1. For development, I suggest using visual code as text editor https://code.visualstudio.com/ because it has git functionalities integrated into it.
 
+2. Ionic tutorial: https://www.youtube.com/watch?v=qs2n_poLarc&t=2548s
+
+3. Rails tutorial: https://www.youtube.com/watch?v=QojnRc7SS9o&t=1159s
+
 v-0.0.1
