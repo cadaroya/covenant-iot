@@ -30,4 +30,7 @@
 - Arrange the fan's circuit using [this guide](https://electronics.stackexchange.com/questions/137753/arduino-transistor-to-switch-pc-fan-on-off)
 
 # Setting up the actual code
-- *(code folder TBA)*
+- Open `covenant-arduino/covenant-arduino.ino` in the Arduino IDE
+- Change the `ssid`, `pass`, `server`, and `port` to the actual applicable values
+
+v0.0.3
