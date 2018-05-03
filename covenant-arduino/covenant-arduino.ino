@@ -1,29 +1,31 @@
 #include "WiFiEsp.h"
-
-// Emulate Serial1 on pins 6/7 if not present
 #ifndef HAVE_HWSERIAL1
 #include "SoftwareSerial.h"
 SoftwareSerial Serial1(2, 3); // RX, TX
 #endif
 
-int threshold = 200;              // calibrate this
-char ssid[] = "retardis";            // your network SSID (name)
-char pass[] = "sigepala";        // your network password
+
+/* PROGRAM SETTINGS */
+int threshold = 200;
+char ssid[] = "retardis";
+char pass[] = "sigepala";
 char host[] = "192.168.43.21";
 int port = 3000;
+const unsigned long postingInterval = 10000L; //10000L = 10 seconds
 
 
-int status = WL_IDLE_STATUS;     // the Wifi radio's status
-byte mac[6];
+/* MISC. GLOBAL VARIABLES */
+int status = WL_IDLE_STATUS;
 String macStr;
-
-int retries = 0;
-unsigned long lastConnectionTime = 0;         // last time you connected to the server, in milliseconds
-const unsigned long postingInterval = 10000L; // delay between updates, in milliseconds
+unsigned long lastConnectionTime = 0;
 
 WiFiEspClient client;
 
+
+/* FUNCTIONS */
+
 void(* resetBoard) (void) = 0;
+
 
 void setup()
 {
@@ -46,6 +48,7 @@ void setup()
   printWifiStatus();
 }
 
+
 void loop()
 {
   /*while (client.available()) {
@@ -57,6 +60,7 @@ void loop()
     httpRequest();
   }
 }
+
 
 void httpRequest()
 {
@@ -97,6 +101,7 @@ void httpRequest()
 
 void printWifiStatus()
 {
+  byte mac[6];
   WiFi.macAddress(mac);
   macStr = String();
   for (int i=5; i>=0; i--) {

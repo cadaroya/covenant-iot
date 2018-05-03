@@ -34,6 +34,10 @@
 
 # Setting up the actual code
 - Open `covenant-arduino/covenant-arduino.ino` in the Arduino IDE
-- Change the `ssid`, `pass`, `server`, and `port` to the actual applicable values
+- Set the following variables with the actual applicable values:
+    - `threshold` - calibrated by testing the MQ-7 sensor with & without CO
+    - `ssid` & `pass` - depends on the WiFi network it'll connect to
+    - `host` - hostname/IP of the server running Rails & Ionic
+    - `postingInterval` - how often it'll send data to the server
 
-v0.0.4
+v0.0.5
