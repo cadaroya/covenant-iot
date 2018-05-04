@@ -42,18 +42,21 @@
 # Setting up the actual code
 - Open `covenant-arduino/covenant-arduino.ino` in the Arduino IDE
 - Set the following variables with the actual applicable values:
-    - `threshold` - (calibrated by testing the MQ-7 sensor with different CO levels)
-    - `ssid` & `pass` - (depends on the WiFi network the Arduino will connect to)
+    - `threshold` - the critical sensor value for turning the fan on/off
+       - calibrated by testing the MQ-7 sensor with different CO levels
+    - `ssid` & `pass` - details of the WiFi network to connect to
     - `host` & `port` - hostname/IP & port number of the server running Rails
-    - `postingInterval` - how often it'll send data to the server
-	- `DEBUG_WIFI` - whether to send debugging serial messages or not
-		- set this to `false` on deployment, since extra serial messages can slow down the communication 
+    - `postingInterval` - how often the board will send data to the server
+    - `threshTimeout` - how long the fan should stay in its current state (on/off) after the sensor value passes the above/below the threshold
+	- `DEBUG_COV` - whether to send debugging serial messages or not
+		- set this to `false` on deployment, since extra serial messages can slow down the communication
 between the Arduino & the WiFi module 
+    - *(debug only)* `readInterval` - how often the board will send the sensor value to the serial
 
 # Running (and monitoring) the code
 - Plug the Arduino to the computer with a USB male-to-male type A-to-B cable
 - Open the Arduino IDE and select the board, processor, & port
 - Press Ctrl-Shift-M to open the Serial Monitor
-- In the Serial Monitor window, select `115200 baud` in the dropdown in the bottom toolbar
+- In the Serial Monitor window, select `9600 baud` in the dropdown in the bottom toolbar
 
-v0.0.7
+v0.0.10
