@@ -1,6 +1,7 @@
 # Required hardware
 - Arduino Duemilanove/Diecimila, or a similar clone of one of those
-- MQ-7 sensor kit (not just the sensor)
+- MQ-7 sensor **kit**
+  - If the kit doesn't automatically vary the voltage, 
 - ESP-12E or ESP-07E WiFi shield
 - Any computer fan
 - 2N3904 transistor
@@ -20,8 +21,13 @@
      - Select `Tools/Processor/ATmega328P`
      - Select `Tools/Port/<whichever port the ACEduino is plugged into>`
 - Download the [WiFiEsp library](https://github.com/bportaluri/WiFiEsp/archive/master.zip)
-- Go to `Sketch/Include Library/Add .ZIP Library`
+- Go to `Sketch/Include Library/Add .ZIP Library` in the IDE
 - Select `WiFiEsp.zip`
+- Go to `File/Preferences` and note the `Sketchbook Location`
+- Open `<Sketchbook Location>/libraries/WiFiEsp-master/src/utility/debug.h` in a text editor
+- Add `#define _ESPLOGLEVEL_ 2` immediately below `#include <stdio.h>`
+  - This is needed to limit the number of debug serial messages sent to just the errors & warnings
+  - `#define _ESPLOGLEVEL_ 0` may be used instead for actual deployment
 
 # Setting up the hardware
 - Plug the ESP-12E *WiFi shield* over the Arduino
@@ -29,15 +35,25 @@
   - `VIN` to the Arduino's `5V`
   - `GND` to `GND`
   - `OUT` to analog pin 0
-- Calibrate the MQ-7 by adjusting the potentiometer
+- Calibrate the MQ-7:
+  - Leave the MQ-7 kit and the Arduino running for at least 24 hours in relatively clean air
 - Arrange the fan's circuit using [this guide](https://electronics.stackexchange.com/questions/137753/arduino-transistor-to-switch-pc-fan-on-off)
 
 # Setting up the actual code
 - Open `covenant-arduino/covenant-arduino.ino` in the Arduino IDE
 - Set the following variables with the actual applicable values:
-    - `threshold` - calibrated by testing the MQ-7 sensor with & without CO
-    - `ssid` & `pass` - depends on the WiFi network it'll connect to
-    - `host` - hostname/IP of the server running Rails & Ionic
+    - `threshold` - (calibrated by testing the MQ-7 sensor with different CO levels)
+    - `ssid` & `pass` - (depends on the WiFi network the Arduino will connect to)
+    - `host` & `port` - hostname/IP & port number of the server running Rails
     - `postingInterval` - how often it'll send data to the server
+	- `DEBUG_WIFI` - whether to send debugging serial messages or not
+		- set this to `false` on deployment, since extra serial messages can slow down the communication 
+between the Arduino & the WiFi module 
 
-v0.0.5
+# Running (and monitoring) the code
+- Plug the Arduino to the computer with a USB male-to-male type A-to-B cable
+- Open the Arduino IDE and select the board, processor, & port
+- Press Ctrl-Shift-M to open the Serial Monitor
+- In the Serial Monitor window, select `115200 baud` in the dropdown in the bottom toolbar
+
+v0.0.7
