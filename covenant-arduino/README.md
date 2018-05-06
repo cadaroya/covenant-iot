@@ -59,4 +59,9 @@ between the Arduino & the WiFi module
 - Press Ctrl-Shift-M to open the Serial Monitor
 - In the Serial Monitor window, select `9600 baud` in the dropdown in the bottom toolbar
 
+# Other Notes
+- Green Pin is set to pin 4
+- Yellow Pin is set to pin 5
+- Orange Pin is set to pin 6
+- Red Pin is set to pin 7
 v0.0.10
