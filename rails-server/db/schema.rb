@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180430141522) do
+ActiveRecord::Schema.define(version: 20180506072214) do
 
   create_table "hardwares", force: :cascade do |t|
     t.integer "ipv4_octet1"
@@ -26,6 +26,9 @@ ActiveRecord::Schema.define(version: 20180430141522) do
     t.integer "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "hardware_id"
+    t.index ["hardware_id"], name: "index_hardwares_on_hardware_id"
+    t.index ["ipv4_octet1", "ipv4_octet2", "ipv4_octet3", "ipv4_octet4"], name: "ip_addr_index"
   end
 
   create_table "readings", force: :cascade do |t|
@@ -35,6 +38,8 @@ ActiveRecord::Schema.define(version: 20180430141522) do
     t.integer "threshold"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["hardware_id"], name: "index_readings_on_hardware_id"
+    t.index ["token"], name: "index_readings_on_token"
   end
 
 end
