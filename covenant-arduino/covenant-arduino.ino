@@ -17,7 +17,7 @@ SoftwareSerial Serial1(2, 3);
 
 
 /* PROGRAM SETTINGS */
-int threshold = 100;
+int threshold = 160;
 char ssid[] = "retardis";
 char pass[] = "sigepala";
 char host[] = "192.168.43.21";
@@ -25,6 +25,10 @@ int port = 3000;
 const unsigned long postingInterval = 60000L; //1000L = 1 second
 const unsigned long readInterval = 3000L;
 const unsigned long threshTimeout = 30000L;
+int greenLED = 4;
+int yellowLED = 5;
+int orangeLED = 6;
+int redLED = 7;
 #define DEBUG_COV true
 
 
@@ -40,13 +44,17 @@ bool runningFan = false;
 WiFiEspClient client;
 
 
+
 /* FUNCTIONS */
 
 void setup()
 {
   pinMode(A0, INPUT);
   pinMode(A5, OUTPUT);
-  
+  pinMode(greenLED, OUTPUT);
+  pinMode(orangeLED, OUTPUT);
+  pinMode(yellowLED, OUTPUT);
+  pinMode(redLED, OUTPUT);
   Serial.begin(9600);
   while (!Serial);
   Serial1.begin(9600);  // ESP-12E only supports up to 9600 baudrate
@@ -109,6 +117,30 @@ void loop()
         vardisp2("WRN", "Server ping failed ", millis()/1000);
       }
     }
+  }
+  if (sensorVal <= 120 && sensorVal > 0){
+    digitalWrite(greenLED,HIGH);
+    digitalWrite(yellowLED,LOW);
+    digitalWrite(orangeLED,LOW);
+    digitalWrite(redLED,LOW);
+  }
+  else if (sensorVal <= 140 && sensorVal > 120){
+    digitalWrite(greenLED,LOW);
+    digitalWrite(yellowLED,HIGH);
+    digitalWrite(orangeLED,LOW);
+    digitalWrite(redLED,LOW);
+  }
+  else if (sensorVal <= 160 && sensorVal > 140){
+    digitalWrite(greenLED,LOW);
+    digitalWrite(yellowLED,LOW);
+    digitalWrite(orangeLED,HIGH);
+    digitalWrite(redLED,LOW);
+  }
+  else if (sensorVal > threshold){
+    digitalWrite(greenLED,LOW);
+    digitalWrite(yellowLED,LOW);
+    digitalWrite(orangeLED,LOW);
+    digitalWrite(redLED,HIGH);    
   }
 }
 
