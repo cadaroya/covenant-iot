@@ -9,9 +9,21 @@
     <ion-row>
       <ion-col width-50 offset-25>
         <h2>API Reading</h2>
-        <button ion-button (click)="getID()">Get Data</button>
+        <button ion-button (click)="getReadingFromID(hardware_id, token)">Get Data</button>
       </ion-col>
     </ion-row>
+    <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item>
+              Hardware ID: {{hardware_id}}
+            </ion-item>
+            <ion-item>
+              Token: {{token}}
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
     <ion-row *ngIf="data">
       <ion-col>
         <ion-list>

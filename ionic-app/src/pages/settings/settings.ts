@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the SettingsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { Storage } from '@ionic/storage';
+import { HomePage } from '../home/home';
 
 @IonicPage()
 @Component({
@@ -15,11 +10,35 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class SettingsPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  hardware_id: number;
+  token: number;
+
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    private storage: Storage) {
+      this.storage.get('hardware_data').then((data) => {
+        if (data != null){
+          let data_str = JSON.parse(data);
+          this.hardware_id = parseInt(data_str.hardware_id);
+          this.token = parseInt(data_str.token);
+        }
+        else{
+          this.hardware_id = 0;
+          this.token = 0;
+        }
+      });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
   }
 
+  saveForm(){
+    let hardware_data = {
+      hardware_id: this.hardware_id,
+      token: this.token
+    };
+    this.storage.set('hardware_data', JSON.stringify(hardware_data));
+    console.log(hardware_data);
+  }
 }

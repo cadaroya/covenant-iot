@@ -24,7 +24,8 @@ export class ReadingProvider {
     return response;
   }
 
-  getID(){
-    var response = this.http.get(this.url+"100/200")
+  getReadingFromID(hardware_id, token){
+    var response = this.http.get(this.url+hardware_id+"/"+token);
+    return response;
   }
 }
