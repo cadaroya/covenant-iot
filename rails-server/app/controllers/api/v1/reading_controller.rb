@@ -50,7 +50,23 @@ module Api
             end
 
             def show
-
+                concern = Hardware.where('hardware_id = ? AND token = ?', params[:hardware_id], params[:token]).last
+                ip = request.remote_ip.split(".")
+                if concern.nil?
+                    @reading = {
+                    "ip_address": [ip[0].to_i, ip[1].to_i, ip[2].to_i, ip[3].to_i], #shet gumagana to
+                    "threshold": nil,
+                    "analog_reading": nil
+                }
+                else
+                    recent_data = Reading.where('token = ? AND hardware_id = ?', concern.token, concern.hardware_id).order('created_at').last
+                    @reading = {
+                        "ip_address": [ip[0].to_i, ip[1].to_i, ip[2].to_i, ip[3].to_i], #shet gumagana to
+                        "threshold": recent_data.threshold,
+                        "analog_reading": recent_data.analog_reading
+                    }
+                end
+                render json: {status: 'SUCCESS', data: @reading}
             end
         end 
     end
