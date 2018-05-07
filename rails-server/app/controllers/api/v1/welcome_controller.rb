@@ -3,12 +3,10 @@ module Api
         class WelcomeController < ApplicationController
             def index
                 @reading = {
-                    "ip_address": "120.0.0.7"
-                    "threshold": 1
-                    "analog_reading": 123
-                }
-
-                render json: {status: 'SUCCESS', data: @reading}
+                    "id": 1,
+                    "data": "Hello from the webserver! ReadingController"
+                };
+                render json: {status: 'SUCCESS', message:'Loaded articles', data: @reading}
                     
             end
         end
