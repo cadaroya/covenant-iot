@@ -17,15 +17,14 @@ export class ReadingProvider {
     console.log('Hello Reading Provider');
     this.url = 'http://localhost:3000/api/v1/'
     //+this.apiKey+'/conditions/q';
-
-
   }
 
   getReading(){
     var response = this.http.get(this.url+'reading');
-    console.log("Im here");
-    console.log(response);
     return response;
   }
 
+  getID(){
+    var response = this.http.get(this.url+"100/200")
+  }
 }

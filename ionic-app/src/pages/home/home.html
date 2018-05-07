@@ -8,6 +8,23 @@
   <ion-grid>
     <ion-row>
       <ion-col width-50 offset-25>
+        <h2>API Reading</h2>
+        <button ion-button (click)="getID()">Get Data</button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="data">
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <strong>IP Address: </strong>{{data.ip_address[0]}}.{{data.ip_address[1]}}.{{data.ip_address[2]}}.{{data.ip_address[3]}}
+          </ion-item>
+          <ion-item>
+            <strong>Analog Reading: </strong>{{data.analog_reading}}
+          </ion-item>
+          <ion-item>
+            <strong>Threshold: </strong>{{data.threshold}}
+          </ion-item>
+        </ion-list>
       </ion-col>
     </ion-row>
   </ion-grid>

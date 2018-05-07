@@ -7,7 +7,8 @@ import { ReadingProvider} from '../../providers/reading/reading';
   templateUrl: 'home.html'
 })
 export class HomePage {
-  weather: any;
+  data: any;
+  hardware_id: any;
   location: {
     city:string,
     state:string
@@ -23,6 +24,20 @@ export class HomePage {
     }
 
     this.readingProvider.getReading().subscribe((data) => console.log(data));
+  }
+
+  getReading(){
+    this.readingProvider.getReading().subscribe((data) => {
+      console.log("Home.ts");
+      this.data = data;
+    });
+  }
+
+  getID(){
+    this.readingProvider.getReading().subscribe((data) => {
+      console.log("Home.ts");
+      this.data = data.data;
+    });
   }
 
 }
