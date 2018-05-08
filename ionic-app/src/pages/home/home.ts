@@ -21,9 +21,8 @@ export class HomePage {
     public events: Events) {
       this.events.subscribe('getTimer', (data) =>{
         this.time = data;
-        if (data % this.interval == 0){
-          console.log("Interval is reached!" + this.time);
-          this.events.publish('resetTimer');
+        if (data % (this.interval - 1) == 0){
+          this.getReadingFromID(this.hardware_id, this.token);
         }
       })
   }
@@ -39,8 +38,8 @@ export class HomePage {
         this.getReadingFromID(this.hardware_id, this.token);
       }
       else{
-        this.hardware_id = 0;
-        this.token = 0;
+        this.hardware_id = 12345;
+        this.token = 7397;
         this.threshold = 145;
         this.interval = 10;
       }
@@ -49,7 +48,6 @@ export class HomePage {
 
   getReading(){
     this.readingProvider.getReading().subscribe((data) => {
-      console.log("Home.ts get Reading");
       this.data = data["data"];
     });
   }
@@ -57,9 +55,6 @@ export class HomePage {
   getReadingFromID(hardware_id, token){
     this.events.publish('resetTimer');
     this.readingProvider.getReadingFromID(hardware_id, token).subscribe((data) => {
-      console.log("Home.ts get Reading from ID");
-      console.log("Hardware ID: "+hardware_id);
-      console.log("Token: "+ token);
       this.data = data["data"];
       console.log(this.data);
     });

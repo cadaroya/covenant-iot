@@ -14,8 +14,7 @@ export class ReadingProvider {
   url;
 
   constructor(public http: HttpClient) {
-    console.log('Hello Reading Provider');
-    this.url = 'http://immense-plateau-44759.herokuapp.com/api/v1/'
+    this.url = 'http://immense-plateau-44759.herokuapp.com/api/v1/';
     //+this.apiKey+'/conditions/q';
   }
 

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { HomePage } from '../home/home';
 
 @IonicPage()
 @Component({
@@ -27,8 +26,8 @@ export class SettingsPage {
           this.interval = parseInt(data_str.interval);
         }
         else{
-          this.hardware_id = 0;
-          this.token = 0;
+          this.hardware_id = 12345;
+          this.token = 7397;
           this.threshold = 145;
           this.interval = 10;
         }
@@ -36,7 +35,6 @@ export class SettingsPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SettingsPage');
   }
 
   saveForm(){
