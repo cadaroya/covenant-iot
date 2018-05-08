@@ -11,6 +11,8 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { SettingsPage } from '../pages/settings/settings';
 
+import { TimerComponent } from '../components/timer/timer';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ReadingProvider } from '../providers/reading/reading';
@@ -22,7 +24,8 @@ import { ReadingProvider } from '../providers/reading/reading';
     ContactPage,
     HomePage,
     TabsPage,
-    SettingsPage
+    SettingsPage,
+    TimerComponent
   ],
   imports: [
     BrowserModule,

@@ -15,12 +15,20 @@
           <form (ngSubmit)="saveForm()">
             <ion-item>
               <ion-label fixed>Hardware ID:</ion-label>
-              <ion-input [(ngModel)]="hardware_id" name="hardware_id" type="text"></ion-input>
+              <ion-input [(ngModel)]="hardware_id" name="hardware_id" type="number"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label fixed>Token:</ion-label>
-              <ion-input [(ngModel)]="token" name="token" type="text"></ion-input>
+              <ion-input [(ngModel)]="token" name="token" type="number"></ion-input>
             </ion-item>
+            <ion-item>
+              <ion-label fixed>Threshold:</ion-label>
+              <ion-input [(ngModel)]="threshold" name="threshold" type="number"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>Interval (in secnds):</ion-label>
+                <ion-input [(ngModel)]="interval" name="interval" type="number"></ion-input>
+              </ion-item>
             <button ion-button type="submit" block>Save Changes</button>
           </form>
         </ion-list>

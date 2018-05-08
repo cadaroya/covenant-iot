@@ -1,3 +1,5 @@
+<timer></timer>
+
 <ion-header>
   <ion-navbar>
     <ion-title>Home</ion-title>
@@ -5,6 +7,7 @@
 </ion-header>
 
 <ion-content padding class="home">
+  
   <ion-grid>
     <ion-row>
       <ion-col width-50 offset-25>
@@ -20,6 +23,15 @@
             </ion-item>
             <ion-item>
               Token: {{token}}
+            </ion-item>
+            <ion-item>
+              Saved Threshold: {{threshold}}
+            </ion-item>
+            <ion-item>
+              Interval: {{interval}}
+            </ion-item>
+            <ion-item>
+              Current Timer: {{time}}
             </ion-item>
           </ion-list>
         </ion-col>
