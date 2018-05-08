@@ -36,11 +36,11 @@ const unsigned long postingInterval = 60000L; //1000L = 1 second
 const unsigned long readInterval = 500L;
 const unsigned long threshTimeout = 30000L;
 const int threshold = 100;
+bool usePing = false;
 const bool debug_cov = true;
 
 
 /* MISC. GLOBAL VARIABLES */
-bool usePing = false;
 int wifiStatus = WL_IDLE_STATUS;
 String macStr;
 unsigned long lastConnectionTime = 0;
