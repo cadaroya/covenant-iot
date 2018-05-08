@@ -28,16 +28,27 @@
 - Add `#define _ESPLOGLEVEL_ 2` immediately below `#include <stdio.h>`
   - This is needed to limit the number of debug serial messages sent to just the errors & warnings
   - `#define _ESPLOGLEVEL_ 0` may be used instead for actual deployment
+- Open `<Sketchbook Location>/libraries/WiFiEsp-master/src/utility/EspDrv.cpp` in a text editor
+- At lines **805** & **874**, change `int idx = readUntil(1000` to `int idx = readUntil(8000`
+  - This is needed to avoid [this error](https://github.com/bportaluri/WiFiEsp/issues/111)
 
 # Setting up the hardware
-- Plug the ESP-12E *WiFi shield* over the Arduino
+- Plug the ESP-12E WiFi shield over the Arduino
 - Plug the MQ7 sensor kit to the Arduino using male-to-female pins:
   - `VIN` to the Arduino's `5V`
   - `GND` to `GND`
   - `OUT` to analog pin 0
 - Calibrate the MQ-7:
   - Leave the MQ-7 kit and the Arduino running for at least 24 hours in relatively clean air
-- Arrange the fan's circuit using [this guide](https://electronics.stackexchange.com/questions/137753/arduino-transistor-to-switch-pc-fan-on-off)
+- Arrange the fan's circuit like this: ![circuitimage](https://i.imgur.com/sNUUjAt.png)
+  - `R` is the resistance, `W` is the fan's wattage, and `V` is the external voltage source
+  - `Pin A0` is plugged into the Arduino's analog pin 0
+  - `R = (5 - 0.7) / ((W/V) / 10)`
+- Plug the following LEDs:
+  - Green - pin 4
+  - Yellow - pin 5
+  - Orange - pin 6
+  - Red - pin 7
 
 # Setting up the actual code
 - Open `covenant-arduino/covenant-arduino.ino` in the Arduino IDE
@@ -48,10 +59,10 @@
     - `host` & `port` - hostname/IP & port number of the server running Rails
     - `postingInterval` - how often the board will send data to the server
     - `threshTimeout` - how long the fan should stay in its current state (on/off) after the sensor value passes the above/below the threshold
-	- `DEBUG_COV` - whether to send debugging serial messages or not
+	- `debug_cov` - whether to send debugging serial messages or not
 		- set this to `false` on deployment, since extra serial messages can slow down the communication
 between the Arduino & the WiFi module 
-    - *(debug only)* `readInterval` - how often the board will send the sensor value to the serial
+    - *(if debug_cov is true)* `readInterval` - how often the board will send the sensor value to the serial
 
 # Running (and monitoring) the code
 - Plug the Arduino to the computer with a USB male-to-male type A-to-B cable
@@ -59,9 +70,4 @@ between the Arduino & the WiFi module
 - Press Ctrl-Shift-M to open the Serial Monitor
 - In the Serial Monitor window, select `9600 baud` in the dropdown in the bottom toolbar
 
-# Other Notes
-- Green Pin is set to pin 4
-- Yellow Pin is set to pin 5
-- Orange Pin is set to pin 6
-- Red Pin is set to pin 7
-v0.0.10
+v0.1.0
