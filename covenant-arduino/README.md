@@ -40,9 +40,10 @@
   - `OUT` to analog pin 0
 - Calibrate the MQ-7:
   - Leave the MQ-7 kit and the Arduino running for at least 24 hours in relatively clean air
-- Arrange the fan's circuit like this: ![circuitimage](https://i.imgur.com/sNUUjAt.png)
+- Arrange the fan's circuit like this:
+  ![circuitimage](https://i.imgur.com/sNUUjAt.png)
   - `R` is the resistance, `W` is the fan's wattage, and `V` is the external voltage source
-  - `Pin A0` is plugged into the Arduino's analog pin 0
+  - `Pin A5` is plugged into the Arduino's analog pin 5
   - `R = (5 - 0.7) / ((W/V) / 10)`
 - Plug the following LEDs:
   - Green - pin 4
