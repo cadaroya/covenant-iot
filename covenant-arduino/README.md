@@ -1,12 +1,12 @@
 # Required hardware
 - Arduino Duemilanove/Diecimila, or a similar clone of one of those
 - MQ-7 sensor **kit**
-  - If the kit doesn't automatically vary the voltage, 
+  - If the kit doesn't automatically vary the voltage, follow [this guide](http://www.instructables.com/id/Arduino-CO-Monitor-Using-MQ-7-Sensor/)
 - ESP-12E or ESP-07E WiFi shield
 - Any computer fan
 - 2N3904 transistor
 - Any diode
-- Resistor (based on formula in linked guide below)
+- Resistor (refer to fan circuit below)
 - Male-to-female wires
 - Male-to-male wires
 
@@ -60,6 +60,8 @@
     - `host` & `port` - hostname/IP & port number of the server running Rails
     - `postingInterval` - how often the board will send data to the server
     - `threshTimeout` - how long the fan should stay in its current state (on/off) after the sensor value passes the above/below the threshold
+    - `usePing` - whether to use ping to check the server's status
+        - disable this if the server doesn't respond to ping requests
 	- `debug_cov` - whether to send debugging serial messages or not
 		- set this to `false` on deployment, since extra serial messages can slow down the communication
 between the Arduino & the WiFi module 
