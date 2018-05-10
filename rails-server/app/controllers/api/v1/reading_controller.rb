@@ -44,7 +44,7 @@ module Api
                 reading.token = payload["token"];
                 reading.threshold = payload["threshold"];
                 reading.save()
-                render json: {status: 'SUCCESS', data: payload}
+                render json: {status: 'SUCCESS', data: payload, time: reading.created_at}
 
 
             end
