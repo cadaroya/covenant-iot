@@ -44,7 +44,7 @@ module Api
                 reading.token = payload["token"];
                 reading.threshold = payload["threshold"];
                 reading.save()
-                render json: {status: 'SUCCESS', data: payload}
+                render json: {status: 'SUCCESS', data: payload, time: reading.created_at}
 
 
             end
@@ -56,14 +56,16 @@ module Api
                     @reading = {
                     "ip_address": [ip[0].to_i, ip[1].to_i, ip[2].to_i, ip[3].to_i], #shet gumagana to
                     "threshold": nil,
-                    "analog_reading": nil
+                    "analog_reading": nil,
+                    "time": nil
                 }
                 else
                     recent_data = Reading.where('token = ? AND hardware_id = ?', concern.token, concern.hardware_id).order('created_at').last
                     @reading = {
                         "ip_address": [ip[0].to_i, ip[1].to_i, ip[2].to_i, ip[3].to_i], #shet gumagana to
                         "threshold": recent_data.threshold,
-                        "analog_reading": recent_data.analog_reading
+                        "analog_reading": recent_data.analog_reading,
+                        "time": recent_data.created_at.to_formatted_s(:rfc822)   
                     }
                 end
                 render json: {status: 'SUCCESS', data: @reading}
