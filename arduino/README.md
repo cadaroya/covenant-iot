@@ -42,8 +42,7 @@ The project mainly uses the `covenant-wifi` code.
   - `VIN` to the Arduino's `5V`
   - `GND` to the Arduino's `GND`
   - `OUT` to analog pin 0
-- Calibrate the MQ-7:
-  - Leave the MQ-7 kit and the Arduino running for at least 24 hours in relatively clean air
+- Calibrate the MQ-7: refer to **Calibrating the sensor**
 - Arrange the fan's circuit like this:
 
   ![circuitimage](https://i.imgur.com/sNUUjAt.png)
