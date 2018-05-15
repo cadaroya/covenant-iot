@@ -51,21 +51,21 @@
  */
  
 /*const char ssid[]                   = "cs131";
-const char pass[]                   = "urd1(31)4me<3";*/
-const char ssid[]                   = "retardis";
-const char pass[]                   = "sigepala";
-const char host[]                   = "immense-plateau-44759.herokuapp.com";
-#define port                        80
-#define readInterval                1000L
-#define reconnectTimeout            10000L
-#define maxTries                    1
-#define integerValue                false
-#define R0                          0.07
+const char pass[]                     = "urd1(31)4me<3";*/
+const char ssid[]                     = "retardis";
+const char pass[]                     = "sigepala";
+const char host[]                     = "immense-plateau-44759.herokuapp.com";
+const int port                        = 80;
+const unsigned long readInterval      = 1000L;
+const unsigned long reconnectTimeout  = 10000L;
+const int maxTries                    = 1;
+const bool integerValue               = false;
+const double R0                       = 0.07;
 //#define threshold                   25
-#define threshold                   8
-#define usePing                     true
-#define pingServer                  "1.1.1.1"
-#define debug_cov                   true
+const double threshold                = 8;
+const bool usePing                    = true;
+const char* pingServer                = "1.1.1.1";
+const bool debug_cov                  = true;
 
 
 /*
@@ -334,19 +334,13 @@ void httpRequest()
       }
     }
     vardisp("I", "Connected, sending data to server");
-    //var(F("=======================================================================\n"));
     digitalWrite(connLed, HIGH);
 
     client.print("POST /api/v1/reading HTTP/1.1\r\nHost: ");
-    //var(F("POST /api/v1/reading HTTP/1.1\r\nHost: "));
     client.print(host);
-    //var(host);
     client.print("\r\nUser-Agent: ACEduino/2.1\r\n");
-    //var(F("\r\nUser-Agent: ACEduino/2.1\r\n"));
     client.print("Content-Type: application/json\r\n"
       "Content-Length: ");
-    //var(F("Content-Type: application/json\r\n"
-    //    "Content-Length: "));
 
     char* postdata1 = (char*) malloc(sizeof(char) * 50);
     sprintf_P(postdata1, PSTR("{\""));
@@ -376,28 +370,12 @@ void httpRequest()
     sprintf_P(postdata2, PSTR("%s}"), postdata2);
     
     client.print(strlen(postdata1) + strlen(postdata2));
-    //var(strlen(postdata1) + strlen(postdata2));
     client.print("\r\nConnection: close\r\n\r\n");
-    //var(F("\r\nConnection: close\r\n\r\n"));
     client.print(postdata1);
-    //var(postdata1);
     client.print(postdata2);
-    //var(postdata2);
-
     free(postdata1);
     free(postdata2);
-    
-    //var(F("\n=======================================================================\n"));
     vardisp("I", "Data sent to server");
-    
-    /*if (debug_cov) {
-      var(F("=======================================================================\n"));
-      while (client.available()) {
-        char c = client.read();
-        Serial.write(c);
-      }
-      var(F("\n=======================================================================\n"));
-    }*/
   }
   else {
     vardisp("W", "Connection to server failed");
@@ -412,6 +390,7 @@ void httpRequest()
     else {
       digitalWrite(connLed, LOW);
       vardisp("W", "Board will now run in sensor-only mode");
+      lastWifiTime = millis();
       sensorOnly = true;
     }
   }
