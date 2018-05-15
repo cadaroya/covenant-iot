@@ -73,14 +73,12 @@ The project mainly uses the `covenant-wifi` code.
 - Press Ctrl-Shift-M to open the Serial Monitor
 - In the Serial Monitor window, select `9600 baud` in the dropdown in the bottom toolbar
 - Let the code run for some time (at least 30 minutes), then use the last output as the `R0` value for the main program
-
-
-# Testing the sensor
 - Open `arduino/mq7-tester/mq7-tester.ino` in the Arduino IDE
 - Plug the Arduino (with the MQ-7 sensor) to the computer, then upload the code
 - Press Ctrl-Shift-L to open the Serial Plotter
 - In the Serial Plotter window, select `9600 baud` in the dropdown in the bottom toolbar
 - Test the sensor by exposing it to different levels of CO, while noting the value displayed in the plotter for each exposure
+    - Note the values before running the main program: **the threshold changes depending on the temperature & humidity of the environment**
     - If the sensor value doesn't change much by blowing over it, check for some misplaced wiring and/or a broken MQ-7 sensor
 
 

@@ -50,19 +50,22 @@
  * PROGRAM SETTINGS
  */
  
-const char ssid[]                   = "cs131";
-const char pass[]                   = "urd1(31)4me<3";
+/*const char ssid[]                   = "cs131";
+const char pass[]                   = "urd1(31)4me<3";*/
+const char ssid[]                   = "retardis";
+const char pass[]                   = "sigepala";
 const char host[]                   = "immense-plateau-44759.herokuapp.com";
 #define port                        80
 #define readInterval                1000L
 #define reconnectTimeout            10000L
 #define maxTries                    1
-#define integerValue                true
+#define integerValue                false
 #define R0                          0.07
-#define threshold                   25
+//#define threshold                   25
+#define threshold                   8
 #define usePing                     true
 #define pingServer                  "1.1.1.1"
-#define debug_cov                   false
+#define debug_cov                   true
 
 
 /*
@@ -216,6 +219,7 @@ void loop() {
     if (sensorVal >= threshold) {
       if (state == 0) {
         vardisp("I", "Sensor level threshold reached, starting countdown");
+        setLed(0);
         isTransition = true;
         state = 1;
         lastTransTime = millis();
@@ -363,7 +367,12 @@ void httpRequest()
       dtostrf(sensorVal, 4, 2, str_temp);
       sprintf_P(postdata2, PSTR(",\"%s\":%s"), "analog_reading", str_temp);
     }
-    sprintf_P(postdata2, PSTR("%s,\"%s\":%d"), postdata2, "threshold", state);
+    if (state > 0) {
+      sprintf_P(postdata2, PSTR("%s,\"%s\":%d"), postdata2, "threshold", state-1);
+    }
+    else {
+      sprintf_P(postdata2, PSTR("%s,\"%s\":%d"), postdata2, "threshold", state);
+    }
     sprintf_P(postdata2, PSTR("%s}"), postdata2);
     
     client.print(strlen(postdata1) + strlen(postdata2));

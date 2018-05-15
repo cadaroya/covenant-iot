@@ -4,6 +4,7 @@
 
 
 /* R0 values: probably 0.07
+ *  DCS: 0.13
  */
  
 
@@ -20,11 +21,13 @@ void loop() {
     double R0 = 0;
     double sensorValue = 0;
 
+    double ctr = 0;
     for (int i = 0; i<600; i++) {
+      ctr += 1;
       sensorValue = sensorValue + analogRead(A0);
       delay(100);
     }
-    sensorValue = sensorValue/100;
+    sensorValue = sensorValue/ctr;
     
     sensor_volt = (sensorValue/1024.0) * 5.0;
     RS_air = (5.0 - sensor_volt)/sensor_volt;

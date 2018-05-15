@@ -5,6 +5,12 @@
 // house:       #define R0 0.07
 #define R0 0.07
 
+double peak = 0;
+double low = INFINITY;
+double runavg = 0;
+double avgaccum = 0;
+double avgctr = 0;
+
 double rsr0_ppm(double r) {
     return 50.0 * pow((1.667 / r), 1.0/0.6661);
 }
@@ -24,6 +30,29 @@ void loop() {
     RS_gas = (5.0-sensor_volt)/sensor_volt;
     ratio = RS_gas/R0 ;
     double ppm = rsr0_ppm(ratio);
-    Serial.println(ppm);
+
+    if (ppm < low) {
+      low = ppm;
+    }
+    if (ppm > peak) {
+      peak = ppm;
+    }
+    if (avgctr < 20) {
+      avgctr += 1;
+      avgaccum += ppm;
+    }
+    else {
+      runavg = avgaccum / avgctr;
+      avgctr = 0;
+      avgaccum = 0;
+    }
+    
+    Serial.print(ppm);
+    Serial.print(" ");
+    Serial.print(low);
+    Serial.print(" ");
+    Serial.print(runavg);
+    Serial.print(" ");
+    Serial.println(peak);
     delay(50);
 }
