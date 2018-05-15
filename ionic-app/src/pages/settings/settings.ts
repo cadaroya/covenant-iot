@@ -22,13 +22,11 @@ export class SettingsPage {
           let data_str = JSON.parse(data);
           this.hardware_id = parseInt(data_str.hardware_id);
           this.token = parseInt(data_str.token);
-          this.threshold = parseInt(data_str.threshold);
           this.interval = parseInt(data_str.interval);
         }
         else{
           this.hardware_id = 12345;
           this.token = 7397;
-          this.threshold = 145;
           this.interval = 10;
         }
       });
@@ -41,7 +39,6 @@ export class SettingsPage {
     let settings = {
       hardware_id: this.hardware_id,
       token: this.token,
-      threshold: this.threshold,
       interval: this.interval
     };
     this.storage.set('settings', JSON.stringify(settings));

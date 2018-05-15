@@ -8,44 +8,54 @@
 
 <ion-content padding class="home">
   
-  <ion-grid>
+  <ion-grid style="padding-bottom: 30px">
     <ion-row>
       <ion-col width-50 offset-25>
-        <h2>API Reading</h2>
-        <button ion-button (click)="getReadingFromID(hardware_id, token)">Get Data</button>
+        <p text-center>The current CO threshold is...</p>
+        <div *ngIf="data">
+          <h2 text-center *ngIf="data['threshold'] == 'Green'" style="color:green">{{data.threshold}}</h2>
+          <h2 text-center *ngIf="data['threshold'] == 'Yellow'" style="color:yellow">{{data.threshold}}</h2>
+          <h2 text-center *ngIf="data['threshold'] == 'Orange'" style="color:orange">{{data.threshold}}</h2>
+          <h2 text-center *ngIf="data['threshold'] == 'Red'" style="color:red">{{data.threshold}}</h2>
+          <h2 text-center *ngIf="data['threshold'] == 'undefined'">{{data.threshold}}</h2>
+        </div>
+        <p style="text-align: center; color:gray">Results refresh every {{interval}} seconds.</p>
+        <div text-center><button ion-button small round outline (click)="getReadingFromID(hardware_id, token)">Manual Refresh</button></div>
+        
       </ion-col>
     </ion-row>
-    <ion-row>
-        <ion-col>
-          <ion-list>
-            <ion-item>
-              Hardware ID: {{hardware_id}}
-            </ion-item>
-            <ion-item>
-              Token: {{token}}
-            </ion-item>
-            <ion-item>
-              Interval: {{interval}}
-            </ion-item>
-            <ion-item>
-              Current Timer: {{time}}
-            </ion-item>
-          </ion-list>
-        </ion-col>
-      </ion-row>
+    
     <ion-row *ngIf="data">
       <ion-col>
-        <ion-list>
+        <ion-item-group>
+          <ion-item-divider>Detailed CO Information</ion-item-divider>
           <ion-item>
             <strong>IP Address: </strong>{{data.ip_address[0]}}.{{data.ip_address[1]}}.{{data.ip_address[2]}}.{{data.ip_address[3]}}
           </ion-item>
           <ion-item>
             <strong>Analog Reading: </strong>{{data.analog_reading}}
           </ion-item>
+        </ion-item-group>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item-group>
+          <ion-item-divider>Device Information and Settings</ion-item-divider>
           <ion-item>
-            <strong>Threshold: </strong>{{data.threshold}}
+              <strong>Hardware ID: </strong>{{hardware_id}}
           </ion-item>
-        </ion-list>
+          <ion-item>
+              <strong>Token: </strong>{{token}}
+          </ion-item>
+          <ion-item>
+              <strong>Interval: </strong>{{interval}}
+          </ion-item>
+          <ion-item>
+            <strong>Current Timer: </strong> {{time}}
+          </ion-item>
+        </ion-item-group>
       </ion-col>
     </ion-row>
   </ion-grid>
