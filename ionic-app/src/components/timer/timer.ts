@@ -14,10 +14,13 @@ import { Events } from 'ionic-angular';
 export class TimerComponent {
 
   time: number;
+  global_time: number;
+
 
   constructor(public events: Events) {
     
     this.time = 0;
+    this.global_time = 0;
     
     setInterval(() => { 
       this.countdown(); // Now the "this" still references the component
@@ -30,7 +33,8 @@ export class TimerComponent {
 
   countdown(){
     this.time += 1;
-    this.events.publish('getTimer', this.time);
+    this.global_time += 1;
+    this.events.publish('getTimer', this.time, this.global_time);
   }
 
 }

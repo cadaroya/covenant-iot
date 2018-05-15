@@ -16,6 +16,8 @@ import { TimerComponent } from '../components/timer/timer';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ReadingProvider } from '../providers/reading/reading';
+import { BackgroundMode } from '@ionic-native/background-mode';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ import { ReadingProvider } from '../providers/reading/reading';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ReadingProvider
+    ReadingProvider,
+    BackgroundMode,
+    LocalNotifications
   ]
 })
 export class AppModule {}
