@@ -32,9 +32,15 @@
 #define connLed 8
 #define sensPin A0
 #define fanPin A5
-#define fanOff vardisp("I","Turning off fan");digitalWrite(fanPin,LOW);runningFan=false
-#define fanOn vardisp("I","Turning on fan");digitalWrite(fanPin,HIGH);runningFan=true
-#define sensorRead sensorVal=getReading();vardisp("R",sensorVal);
+#define fanOff vardisp("I","Turning off fan");\
+  digitalWrite(fanPin,LOW);\
+  runningFan=false
+#define fanOn vardisp("I","Turning on fan");\
+  digitalWrite(fanPin,HIGH);\
+  runningFan=true
+#define sensorRead sensorVal=getReading();\
+  if(integerValue){var((int)sensorVal);}\
+  else{var(sensorVal);}var("\n");
 
 #define SerialBaud 9600
 #define EspBaud 9600
@@ -50,22 +56,23 @@
  * PROGRAM SETTINGS
  */
  
-/*const char ssid[]                   = "cs131";
-const char pass[]                     = "urd1(31)4me<3";*/
-const char ssid[]                     = "retardis";
-const char pass[]                     = "sigepala";
+const char ssid[]                   = "cs131";
+const char pass[]                     = "urd1(31)4me<3";
+/*const char ssid[]                     = "retardis";
+const char pass[]                     = "sigepala";*/
 const char host[]                     = "immense-plateau-44759.herokuapp.com";
 const int port                        = 80;
+/*const char host[]                     = "192.168.43.21";
+const int port                        = 3000;*/
 const unsigned long readInterval      = 1000L;
-const unsigned long reconnectTimeout  = 10000L;
+const unsigned long reconnectTimeout  = 180000L;
 const int maxTries                    = 1;
-const bool integerValue               = false;
+const bool integerValue               = true;
 const double R0                       = 0.07;
-//#define threshold                   25
-const double threshold                = 8;
+const double threshold                = 2;
 const bool usePing                    = true;
 const char* pingServer                = "1.1.1.1";
-const bool debug_cov                  = true;
+const bool debug_cov                  = false;
 
 
 /*
@@ -91,6 +98,167 @@ const unsigned long ledTimes[] = {10000,20000,30000};
 /*
  * FUNCTIONS
  */
+
+
+void setup() {
+  pinMode(sensPin, INPUT);
+  pinMode(fanPin, OUTPUT);
+  for (int i=0; i<=3; i++) {
+    pinMode(leds[i], OUTPUT);
+    digitalWrite(leds[i], LOW);
+  }
+  pinMode(connLed, OUTPUT);
+  
+  Serial.begin(SerialBaud);
+  while (!Serial);
+  vardisp("\nI", "Serial port ready");
+
+  ESP8266.begin(EspBaud);  // ESP-12E only supports up to 9600 baud
+  while (!ESP8266);
+  vardisp("I", "WiFi serial port ready");
+  
+  vardisp("I", "Initializing WiFi serial port");
+  WiFi.init(&ESP8266);
+  vardisp("I", "WiFi serial port initialized");
+
+  if (WiFi.status() == WL_NO_SHIELD) {
+    vardisp("E", "WiFi shield not present");
+    vardisp("W", "Board will now run in sensor-only mode");
+    sensorOnly = true;
+    lastWifiTime = millis();
+  }
+
+  if (!sensorOnly) {
+    wifiMaxpow;
+    
+    if (tryWifiConn()) {
+      printWifiStatus();
+    }
+    else {
+      vardisp("W", "Board will now run in sensor-only mode");
+      sensorOnly = true;
+      lastWifiTime = millis();
+    }
+  }
+
+  sensorRead;
+  if (sensorVal >= threshold) {
+    state = 1;
+    lastTransTime = millis();
+  }
+  lastReadTime = millis() - readInterval - 100;
+  setLed(0);
+
+  if (!sensorOnly) {
+    httpRequest();
+  }
+}
+
+void loop() {
+  bool isTransition = false;
+  unsigned long currTime = millis();
+  
+  if (currTime - lastReadTime > readInterval) {
+    sensorRead;
+    unsigned long t = currTime - lastTransTime;
+    if (sensorVal >= threshold) {
+      if (state == 0) {
+        vardisp("I", "Sensor level threshold reached, starting countdown");
+        setLed(0);
+        isTransition = true;
+        state = 1;
+        lastTransTime = currTime;
+        t = 0;
+        vardisp("S", state);
+      }
+      if (t <= ledTimes[0]){
+        setLed(0);
+        if (state != 1) {
+          isTransition = true;
+          vardisp("S", state);
+          state = 1;
+        }
+      }
+      else if (t > ledTimes[0] && t <= ledTimes[1]){
+        setLed(1);
+        if (state != 2) {
+          isTransition = true;
+          vardisp("S", state);
+          state = 2;
+        }
+        if (!runningFan) {
+          fanOn;
+        }
+      }
+      else if (t > ledTimes[1] && t <= ledTimes[2]){
+        setLed(2);
+        if (state != 3) {
+          isTransition = true;
+          vardisp("S", state);
+          state = 3;
+        }
+      }
+      else if (t > ledTimes[2]){
+        setLed(3);
+        if (state != 4) {
+          isTransition = true;
+          vardisp("S", state);
+          state = 4;
+        }
+      }
+    }
+    else {
+      if (state != 0) {
+        vardisp("I", "Sensor level below threshold, stopping countdown");
+        setLed(0);
+        isTransition = true;
+        state = 0;
+        vardisp("S", state);
+        lastResetTime = currTime;
+      }
+      if (currTime - lastResetTime > ledTimes[0]) {
+        if (runningFan) {
+          fanOff;
+        }
+      }
+    }
+    lastReadTime = currTime;
+  }
+  
+  if (!sensorOnly) {
+    if (isTransition) {
+      httpRequest();
+    }
+  }
+  else {
+    if (currTime - lastWifiTime > reconnectTimeout) {
+      if (usePing) {
+        if (!WiFi.ping(pingServer)) {
+          if (tryWifiConn()) {
+            vardisp("I", "Board will now run in WiFi polling mode");
+            printWifiStatus();
+            digitalWrite(connLed, HIGH);
+            sensorOnly = false;
+            isTransition = true;
+          }
+        }
+      }
+      else {
+        if (tryWifiConn()) {
+          vardisp("I", "Board will now run in WiFi polling mode");
+          printWifiStatus();
+          digitalWrite(connLed, HIGH);
+          sensorOnly = false;
+          isTransition = true;
+        }
+      }
+      if (isTransition) {
+        httpRequest();
+      }
+    }
+  }
+}
+
 
 double getReading() {
   double val = analogRead(sensPin);
@@ -155,168 +323,7 @@ bool tryWifiConn() {
   return true;
 }
 
-void setup() {
-  pinMode(sensPin, INPUT);
-  pinMode(fanPin, OUTPUT);
-  for (int i=0; i<=3; i++) {
-    pinMode(leds[i], OUTPUT);
-  }
-  pinMode(connLed, OUTPUT);
-  
-  Serial.begin(SerialBaud);
-  while (!Serial);
-  vardisp("\nI", "Serial port ready");
-
-  ESP8266.begin(EspBaud);  // ESP-12E only supports up to 9600 baud
-  while (!ESP8266);
-  vardisp("I", "WiFi serial port ready");
-
-  delay(1000);
-  
-  vardisp("I", "Initializing WiFi serial port");
-  WiFi.init(&ESP8266);
-  vardisp("I", "WiFi serial port initialized");
-
-  if (WiFi.status() == WL_NO_SHIELD) {
-    vardisp("E", "WiFi shield not present");
-    vardisp("W", "Board will now run in sensor-only mode");
-    sensorOnly = true;
-    lastWifiTime = millis();
-  }
-
-  if (!sensorOnly) {
-    wifiMaxpow;
-    //ESP8266.println(F("AT+CWMODE=1"));
-    //ESP8266.println(F("AT+CWSTARTSMART"));
-    
-    if (tryWifiConn()) {
-      printWifiStatus();
-    }
-    else {
-      vardisp("W", "Board will now run in sensor-only mode");
-      sensorOnly = true;
-      lastWifiTime = millis();
-    }
-  }
-
-  sensorRead;
-  if (sensorVal >= threshold) {
-    state = 1;
-    lastTransTime = millis();
-  }
-  lastReadTime = millis() - readInterval - 100;
-
-  if (!sensorOnly) {
-    httpRequest();
-  }
-}
-
-void loop() {
-  bool isTransition = false;
-  if (millis() - lastReadTime > readInterval) {
-    sensorRead;
-    unsigned long t = millis() - lastTransTime;
-    if (sensorVal >= threshold) {
-      if (state == 0) {
-        vardisp("I", "Sensor level threshold reached, starting countdown");
-        setLed(0);
-        isTransition = true;
-        state = 1;
-        lastTransTime = millis();
-        t = 0;
-        vardisp("S", state);
-      }
-      if (t <= ledTimes[0]){
-        setLed(0);
-        if (state != 1) {
-          isTransition = true;
-          vardisp("S", state);
-          state = 1;
-        }
-      }
-      else if (t > ledTimes[0] && t <= ledTimes[1]){
-        setLed(1);
-        if (state != 2) {
-          isTransition = true;
-          vardisp("S", state);
-          state = 2;
-        }
-        if (!runningFan) {
-          fanOn;
-        }
-      }
-      else if (t > ledTimes[1] && t <= ledTimes[2]){
-        setLed(2);
-        if (state != 3) {
-          isTransition = true;
-          vardisp("S", state);
-          state = 3;
-        }
-      }
-      else if (t > ledTimes[2]){
-        setLed(3);
-        if (state != 4) {
-          isTransition = true;
-          vardisp("S", state);
-          state = 4;
-        }
-      }
-    }
-    else {
-      if (state != 0) {
-        vardisp("I", "Sensor level below threshold, stopping countdown");
-        isTransition = true;
-        state = 0;
-        vardisp("S", state);
-        lastResetTime = millis();
-      }
-      unsigned long t2 = millis() - lastResetTime;
-      if (t2 > ledTimes[0]) {
-        setLed(0);
-        if (runningFan) {
-          fanOff;
-        }
-      }
-    }
-    lastReadTime = millis();
-  }
-  
-  if (!sensorOnly) {
-    if (isTransition) {
-      httpRequest();
-    }
-  }
-  else {
-    if (millis() - lastWifiTime > reconnectTimeout) {
-      if (usePing) {
-        if (!WiFi.ping(pingServer)) {
-          if (tryWifiConn()) {
-            vardisp("I", "Board will now run in WiFi polling mode");
-            printWifiStatus();
-            digitalWrite(connLed, HIGH);
-            sensorOnly = false;
-            isTransition = true;
-          }
-        }
-      }
-      else {
-        if (tryWifiConn()) {
-          vardisp("I", "Board will now run in WiFi polling mode");
-          printWifiStatus();
-          digitalWrite(connLed, HIGH);
-          sensorOnly = false;
-          isTransition = true;
-        }
-      }
-      if (isTransition) {
-        httpRequest();
-      }
-    }
-  }
-}
-
-void httpRequest()
-{
+void httpRequest() {
   wifiWake;
   client.stop();
   vardisp("I", "Connecting to server:");
@@ -381,9 +388,8 @@ void httpRequest()
     vardisp("W", "Connection to server failed");
     digitalWrite(connLed, LOW);
     vardisp("I", "Resetting WiFi module");
-    wifiReset;
-    delay(1000);
     wifiWake;
+    wifiReset;
     if (tryWifiConn()) {
       printWifiStatus();
     }
@@ -397,9 +403,7 @@ void httpRequest()
   wifiSleep;
 }
 
-
-void printWifiStatus()
-{
+void printWifiStatus() {
   vardisp2("I", "SSID: ", WiFi.SSID());
   vardisp2("I", "IP: ", WiFi.localIP());
 }

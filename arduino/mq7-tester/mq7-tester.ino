@@ -54,5 +54,5 @@ void loop() {
     Serial.print(runavg);
     Serial.print(" ");
     Serial.println(peak);
-    delay(50);
+    delay(20);
 }

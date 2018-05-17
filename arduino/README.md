@@ -87,9 +87,9 @@ The project mainly uses the `covenant-wifi` code.
 - Set the following variables with the actual applicable values:
     - `ssid` & `pass` - details of the WiFi network to connect to
     - `host` & `port` - hostname/IP & port number of the server running Rails
-    - `readInterval` - how often the board will check the sensor value
-        - This affects everything that depends on the sensor value
+    - `readInterval` - how often the board will check the sensor value & update the level
     - `reconnectTimeout` - how often the board will try to reconnect to WiFi when it loses the connection
+        - This also sends readings upon connection
     - `maxTries` - how many consecutive times to try to reconnect to WiFi when it loses the connection before waiting again
         - Lowering this decreases the delay caused by the reconnection attempts, but also decreases the chance of reconnecting successfully
     - `R0` - the clean-air base value for the sensor
@@ -105,4 +105,4 @@ The project mainly uses the `covenant-wifi` code.
 - Plug the Arduino (with the MQ-7 sensor) to the computer, then upload the code
 
 
-v0.1.8
+v0.1.9
