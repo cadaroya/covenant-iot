@@ -3,7 +3,8 @@
  */
 
 // house:       #define R0 0.07
-#define R0 0.07
+// dcs: 0.25?
+#define R0 0.35
 
 double peak = 0;
 double low = INFINITY;
@@ -46,13 +47,13 @@ void loop() {
       avgctr = 0;
       avgaccum = 0;
     }
-    
+
     Serial.print(ppm);
     Serial.print(" ");
     Serial.print(low);
     Serial.print(" ");
-    Serial.print(runavg);
-    Serial.print(" ");
-    Serial.println(peak);
+    Serial.println(runavg);
+    /*Serial.print(" ");
+    Serial.println(peak);*/
     delay(20);
 }

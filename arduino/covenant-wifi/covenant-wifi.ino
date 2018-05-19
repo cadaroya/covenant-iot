@@ -1,5 +1,5 @@
 /*
- *  Project COvenant
+ *  Project Covenant
  *  2nd Sem CS 145 Capstone 2017-2018
  *  Clemente, Cruz, Daroya, Mariano, Segismundo
  */
@@ -39,40 +39,39 @@
   digitalWrite(fanPin,HIGH);\
   runningFan=true
 #define sensorRead sensorVal=getReading();\
-  if(integerValue){var((int)sensorVal);}\
-  else{var(sensorVal);}var("\n");
+  var(sensorVal);var("\n");
 
 #define SerialBaud 9600
 #define EspBaud 9600
 
-#define wifiName ESP8266.println(F("AT+CWHOSTNAME=COvenant_145"));
 #define wifiSleep ESP8266.println(F("AT+SLEEP=2"));
 #define wifiWake ESP8266.println(F("AT+SLEEP=0"));
-#define wifiMaxpow ESP8266.println(F("AT+RFPOWER=82"));
-#define wifiReset WiFi.reset();wifiMaxpow;wifiName;
+//causes overheating
+//#define wifiMaxpow ESP8266.println(F("AT+RFPOWER=82"));
+#define wifiMaxpow ESP8266.println(F("AT+RFPOWER=40"));
+#define wifiReset WiFi.reset();wifiMaxpow;
 
 
 /*
  * PROGRAM SETTINGS
  */
  
-const char ssid[]                   = "cs131";
-const char pass[]                     = "urd1(31)4me<3";
-/*const char ssid[]                     = "retardis";
-const char pass[]                     = "sigepala";*/
+/*const char ssid[]                     = "cs131";
+const char pass[]                     = "urd1(31)4me<3";*/
+const char ssid[]                     = "retardis";
+const char pass[]                     = "sigepala";
 const char host[]                     = "immense-plateau-44759.herokuapp.com";
 const int port                        = 80;
-/*const char host[]                     = "192.168.43.21";
-const int port                        = 3000;*/
 const unsigned long readInterval      = 1000L;
-const unsigned long reconnectTimeout  = 180000L;
+const unsigned long reconnectTimeout  = 60000L;
 const int maxTries                    = 1;
 const bool integerValue               = true;
-const double R0                       = 0.07;
-const double threshold                = 2;
-const bool usePing                    = true;
+const double R0                       = 0.35;
+const double threshold                = 7;
+const bool usePing                    = false;
 const char* pingServer                = "1.1.1.1";
-const bool debug_cov                  = false;
+//const char* pingServer                = "dcs.upd.edu.ph";
+const bool debug_cov                  = true;
 
 
 /*
@@ -92,7 +91,7 @@ bool runningFan = false;
 int state = 0;
 const int leds[] = {4,5,6,7};
 //const unsigned long ledTimes[] = {120000,240000,360000};
-const unsigned long ledTimes[] = {10000,20000,30000};
+const unsigned long ledTimes[] = {15000,30000,45000};
 
 
 /*
@@ -130,7 +129,6 @@ void setup() {
 
   if (!sensorOnly) {
     wifiMaxpow;
-    
     if (tryWifiConn()) {
       printWifiStatus();
     }
@@ -226,7 +224,7 @@ void loop() {
   }
   
   if (!sensorOnly) {
-    if (isTransition) {
+    if (currTime - lastWifiTime > reconnectTimeout || isTransition) {
       httpRequest();
     }
   }
@@ -266,9 +264,6 @@ double getReading() {
   double rs = (5.0-sensVolt)/sensVolt;
   double ratio = rs/R0;
   double ppm = 50.0 * pow((1.667 / ratio), 1.0/0.6661);
-  if (integerValue) {
-    return round(ppm);
-  }
   return ppm;
 }
 
@@ -325,11 +320,16 @@ bool tryWifiConn() {
 
 void httpRequest() {
   wifiWake;
-  client.stop();
   vardisp("I", "Connecting to server:");
   vardisp2("I", "Hostname: ", host);
   vardisp2("I", "Port: ", port);
-  if (client.connect(host, port)) {
+  int stat = 1;
+  if (!client.connected()) {
+    client.stop();
+    stat = client.connect(host,port);
+    delay(1000);
+  }
+  if (stat) {
     if (usePing) {
       if (!WiFi.ping(pingServer)) {
         digitalWrite(connLed, LOW);
@@ -344,10 +344,14 @@ void httpRequest() {
     digitalWrite(connLed, HIGH);
 
     client.print("POST /api/v1/reading HTTP/1.1\r\nHost: ");
+    vardisp("I","");
     client.print(host);
+    vardisp("I","");
     client.print("\r\nUser-Agent: ACEduino/2.1\r\n");
+    vardisp("I","");
     client.print("Content-Type: application/json\r\n"
       "Content-Length: ");
+    vardisp("I","");
 
     char* postdata1 = (char*) malloc(sizeof(char) * 50);
     sprintf_P(postdata1, PSTR("{\""));
@@ -361,7 +365,7 @@ void httpRequest() {
     }
     char* postdata2 = (char*) malloc(sizeof(char) * 50);
     if (integerValue) {
-      sprintf_P(postdata2, PSTR(",\"%s\":%d"), "analog_reading", (int)sensorVal);
+      sprintf_P(postdata2, PSTR(",\"%s\":%d"), "analog_reading", (int)round(sensorVal));
     }
     else {
       char str_temp[8];
@@ -377,11 +381,16 @@ void httpRequest() {
     sprintf_P(postdata2, PSTR("%s}"), postdata2);
     
     client.print(strlen(postdata1) + strlen(postdata2));
+    vardisp("I","");
     client.print("\r\nConnection: close\r\n\r\n");
+    vardisp("I","");
     client.print(postdata1);
+    vardisp("I","");
     client.print(postdata2);
+    vardisp("I","");
     free(postdata1);
     free(postdata2);
+    client.flush();
     vardisp("I", "Data sent to server");
   }
   else {
