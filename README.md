@@ -1,30 +1,62 @@
-# Basic Image Upload Server in Golang + DB + Auth
+# covenant-iot
 
-## Description
+## Install necessary software:
 
-The application features a basic image upload functionality in Go. 
+### 1. Install npm and nodejs
 
-## Key Notes about Features
-1. MVC architectural pattern. Just to add some organization.
-2. Uses http/template to render the view which is `index.gtpl`
-3. The sqlite3 with Gorm was used to interact with the local database (test.db)
-4. "sharedKey" is saved in the .env file and loaded via godotenv
-5. Basic authoriziation through the checking of shared secret key (No HMAC or ECDSA).
+nodejs: https://nodejs.org/en/
+node (update): `npm install npm@latest -g`
 
-Others: 
-- Env variables were included in gitignore for "security purposes" :)
-- tmp folder storing the images were also ignored
+To check if successful, `npm -v`, `node -v`.
 
-## Basic Setup:
+### 2. Install git
+If in Linux-based systems:
 
-1. My working directory was C:\Users\Carlos\go\src\github.com\cadaroya\brankas\app
-2. Install the packages:
-"github.com/jinzhu/gorm"
-"github.com/gorilla/mux"
-"github.com/jinzhu/gorm/dialects/sqlite"
-"github.com/joho/godotenv"
+Type `sudo add-apt-repository ppa:git-core/ppa`
 
-3. Navigate to the \app folder then type "go run main.go"
+Type `sudo apt-get update`
 
-4. Handler function is at localhost:8080/upload
+Type `sudo apt-get install -y git`
 
+If not linux: Follow steps here: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+
+### 3. Install Ionic
+
+Type `npm install -g ionic cordova`
+Setup video here: https://www.youtube.com/watch?v=BDDUpP5SUA8
+
+Note: You may encounter problems regarding CORS. If so, install this add-on to your browser: https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en
+
+### 4. Install Rails
+
+If on Windows: use [RailsInstaller](http://railsinstaller.org/en)
+
+If on Linux:
+1. Install `ruby` and `rubygems` (or an equivalent package)
+2. `gem install rails`
+3. `gem install bundler`
+4. Install `sqlite` (or an equivalent package)
+5. Install `ruby-bundler` (or an equivalent package)
+
+## Setup:
+
+1. Create folder named "CS145 capstone" (or any other name)
+2. Open cmd/terminal in ~/CS145 capstone then type `git clone https://github.com/cadaroya/covenant-iot.git`
+3. cd to ionic-app then type `npm install`
+    - If this doesn't work, use `npm install --no-bin-links`
+4. cd to rails-server then type `bundle install` and `rails db:migrate`
+
+## Running the project
+
+1. cd to rails-server then type `rails s` to start the back-end server (port 3000)
+2. cd to ionic-app then type `ionic serve` to start the mobile-dev environment (port 8100)
+    - If you get [this error](https://github.com/sass/node-sass/issues/1764), run `sudo npm rebuild node-sass --no-bin-links`
+
+## Additional:
+1. For development, I suggest using visual code as text editor https://code.visualstudio.com/ because it has git functionalities integrated into it.
+
+2. Ionic tutorial: https://www.youtube.com/watch?v=qs2n_poLarc&t=2548s
+
+3. Rails tutorial: https://www.youtube.com/watch?v=QojnRc7SS9o&t=1159s
+
+v-0.0.2
