@@ -65,7 +65,8 @@ GEM
       mini_portile2 (~> 2.3.0)
     pg (1.0.0)
     pg (1.0.0-x86-mingw32)
-    puma (3.11.4)
+    puma (4.3.9)
+      nio4r (~> 2.0)
     rack (2.0.5)
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
@@ -125,7 +126,7 @@ DEPENDENCIES
   byebug
   hirb
   pg
-  puma (~> 3.7)
+  puma (~> 4.3)
   rails (~> 5.1.6)
   rails_12factor
   sqlite3
